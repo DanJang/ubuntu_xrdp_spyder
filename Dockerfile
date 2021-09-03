@@ -17,3 +17,7 @@ RUN echo "export PATH=$PATH:/opt/miniconda/bin/" >> /etc/profile
 
 # cleansing  
 RUN apt-get clean && rm -rf /temp/*
+
+# shared volume
+VOLUME /tunnel
+RUN chmod 777 /tunnel
