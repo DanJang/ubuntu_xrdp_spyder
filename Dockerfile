@@ -11,9 +11,9 @@ RUN apt-get -y update && \
   curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add - && \
   sudo add-apt-repository "deb https://download.sublimetext.com/ apt/stable/" && \
   sudo apt-get install sublime-text -y 
-# cleansing  
-RUN apt-get clean && rm -rf /temp/*
 
 # environmental variables
-ENV PATH=$PATH:/opt/miniconda/bin/
+RUN echo "export PATH=$PATH:/opt/miniconda/bin/" >> /etc/profile
 
+# cleansing  
+RUN apt-get clean && rm -rf /temp/*
