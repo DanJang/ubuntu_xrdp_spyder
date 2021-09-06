@@ -5,9 +5,9 @@
 # start "ubuntu20_xrdp" "%windir%\system32\mstsc.exe" /v:localhost:3390 /w:1800 /h:900
 
 # create a temporary rdp file. (use 'rem' to commentify)
-rem (echo full address:s:localhost:3390& echo username:s:ubuntu& echo desktopwidth:i:1800& echo desktopheight:i:900& echo screen mode id:i:1& echo winposstr:s:0,1,0,0,1800,900& echo authentication level:i:0& echo redirectprinters:i:0 ) > temp.rdp
+rem (echo full address:s:localhost:3390& echo username:s:ubuntu& echo desktopwidth:i:1800& echo desktopheight:i:900& echo screen mode id:i:1& echo winposstr:s:0,1,0,0,1800,900& echo authentication level:i:0& echo redirectprinters:i:0& echo redirectclipboard:i:1 ) > temp.rdp
 #    use below for entire screen in 2nd monitor 
-(echo full address:s:localhost:3390& echo username:s:ubuntu& echo desktopwidth:i:1800& echo desktopheight:i:900& echo screen mode id:i:2& echo winposstr:s:0,1,44,-1748,574,-1317& echo authentication level:i:0& echo redirectprinters:i:0 ) > temp.rdp
+(echo full address:s:localhost:3390& echo username:s:ubuntu& echo desktopwidth:i:1800& echo desktopheight:i:900& echo screen mode id:i:2& echo winposstr:s:0,1,44,-1748,574,-1317& echo authentication level:i:0& echo redirectprinters:i:0& echo redirectclipboard:i:1 ) > temp.rdp
 
 # run mstsc.exe with the rdp file
 start "ubuntu20_xrdp" "%windir%\system32\mstsc.exe" temp.rdp
