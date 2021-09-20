@@ -8,16 +8,15 @@ RUN apt-get -y update && \
   /opt/miniconda/bin/conda install spyder && \
   /opt/miniconda/bin/conda install jupyter && \
   apt-get install apt-transport-https ca-certificates curl software-properties-common curl -y && \
-  curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add - && \
-  sudo add-apt-repository "deb https://download.sublimetext.com/ apt/stable/" && \
-  sudo apt-get install sublime-text -y 
+  curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | apt-key add - && \
+  add-apt-repository "deb https://download.sublimetext.com/ apt/stable/" && \
+  apt-get install sublime-text -y && \
+  apt-get clean && rm -rf /temp/*
 
-# environmental variables
-RUN echo "export PATH=$PATH:/opt/miniconda/bin/" >> /etc/profile
-
-# cleansing  
-RUN apt-get clean && rm -rf /temp/*
+# some environment
+RUN echo "export PATH=$PATH:/opt/miniconda/bin" >> /etc/profile
 
 # shared volume
+WORKDIR /tunnel
 VOLUME /tunnel
 RUN chmod 777 /tunnel

@@ -1,0 +1,43 @@
+FROM ubuntu:18.04
+MAINTAINER Daniel Jang
+
+WORKDIR /temp
+# Set timezone for firefox install, to suppress time zone selection step
+RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
+# for xrdp install, to suppress keyboard selection step
+ENV DEBIAN_FRONTEND=noninteractive
+# install xrdp and etc
+RUN apt -y update && \ 
+  apt install sudo locales nano net-tools wget curl software-properties-common firefox \
+  xfce4 xfce4-terminal openssh-server xrdp xorgxrdp -y  
+# spyder, jupyter
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py38_4.10.3-Linux-x86_64.sh -O /temp/miniconda.sh && \
+  bash /temp/miniconda.sh -b -p /opt/miniconda && \
+  /opt/miniconda/bin/conda install spyder && \
+  /opt/miniconda/bin/conda install jupyter && \
+  apt install apt-transport-https ca-certificates curl software-properties-common curl -y 
+# sublime
+RUN curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | apt-key add - && \
+  add-apt-repository "deb https://download.sublimetext.com/ apt/stable/" && \
+  apt install sublime-text -y 
+# cleansing  
+RUN apt remove -y xscreensaver && apt clean && apt autoremove -y && rm -rf /temp/* && rm -rf /var/cache/apt /var/lib/apt/lists 
+
+# environment
+RUN useradd -m -U ubuntu && echo "ubuntu:ubuntu" | /usr/sbin/chpasswd && usermod -aG sudo ubuntu && mkhomedir_helper ubuntu 
+RUN echo "export PATH=$PATH:/opt/miniconda/bin" >> /etc/profile && \
+  echo "export QT_XKB_CONFIG_ROOT=/usr/share/X11/locale" >> /etc/profile && \
+  echo "xfce-session" >> /etc/profile && \
+  echo "xfce4-session" >> /home/ubuntu/.xsession
+
+# shared volume
+VOLUME ["/home/ubuntu/.config","/home/ubuntu/.ssh","/home/ubuntu/shared"]
+CMD ["chmod", "777", "/home/ubuntu/shared"]
+#ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]
+#CMD ["/usr/sbin/service", "xrdp", "start"]
+#CMD ["/usr/sbin/xrdp"]
+#CMD ["/usr/sbin/xrdp-sesman", "--nodaemon"]
+#CMD ["/opt/miniconda/bin/jupyter", "notebook", "--ip='*'", "--no-browser","--NotebookApp.token=''","--NotebookApp.password=''"]
+#CMD /bin/bash
+EXPOSE 8888 3389 22 9001
+
